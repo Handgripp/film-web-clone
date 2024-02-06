@@ -28,7 +28,7 @@ export class UsersService {
     const hashPassword = await bcrypt.hash(userPassword, salt);
     const emailExist = await this.usersRepository.findOneBy({ email });
     if (emailExist) {
-      throw new ConflictException('Account with this email already exists.');
+      throw new ConflictException('Account with this email already exists');
     }
     const usernameExist = await this.usersRepository.findOneBy({ username });
     if (usernameExist) {
