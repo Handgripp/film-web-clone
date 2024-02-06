@@ -5,8 +5,6 @@ import { MailService } from './mail.service';
 @Module({
   imports: [
     MailerModule.forRoot({
-      // transport: 'smtps://user@example.com:topsecret@smtp.example.com',
-      // or
       transport: {
         host: 'smtp.ethereal.email',
         port: 587,
@@ -22,6 +20,6 @@ import { MailService } from './mail.service';
     }),
   ],
   providers: [MailService],
-  exports: [MailService], // 👈 export for DI
+  exports: [MailService],
 })
 export class MailModule {}
