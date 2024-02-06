@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { CreateUserDto } from './dtos/create-user.dto';
+import { CreateUserRequestDto } from './dtos/request/createUserRequest.dto';
+import { UserResponseDto } from './dtos/response/userResponse.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -12,12 +13,16 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @ApiBearerAuth()
   @Get('')
-  getAll() {
-    return this.usersService.getAll();
+  async getAll(): Promise<UserResponseDto[]> {
+    const users = await this.usersService.getAll();
+    return users.map((user) => new UserResponseDto(user));
   }
 
   @Post('')
-  createUser(@Body() body: CreateUserDto) {
-    return this.usersService.add(body.email, body.username, body.password);
+  async createUser(
+    @Body() body: CreateUserRequestDto,
+  ): Promise<UserResponseDto> {
+    const user = await this.usersService.add(body);
+    return new UserResponseDto(user);
   }
 }

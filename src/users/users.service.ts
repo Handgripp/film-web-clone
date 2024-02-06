@@ -4,60 +4,69 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { MailService } from 'src/mail/mail.service';
-import { Repository } from 'typeorm';
-import { User } from './users.entity';
+import { UsersRepository } from 'src/shared/repositories/users.repository';
+import { CreateUserData } from './users.types';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
+    private readonly usersRepository: UsersRepository,
     private mailService: MailService,
     private readonly jwtService: JwtService,
   ) {}
+
   async getAll() {
-    return this.usersRepository.find();
+    return this.usersRepository.findMany();
   }
+
   async getOne(email: string) {
-    const user = await this.usersRepository.findOneBy({ email });
+    const user = await this.usersRepository.findOneByEmail(email);
     if (!user) {
       throw new NotFoundException();
     }
     return user;
   }
-  async activator(email) {
+
+  async activator(email: string) {
     const user = await this.getOne(email);
     if (!user.isActive) {
       user.isActive = true;
-      const savedUser = await this.usersRepository.save(user);
+      const savedUser = await this.usersRepository.findOneByUsername(
+        user.username,
+      );
       return savedUser;
     } else {
       throw new ConflictException('The account is already activated');
     }
   }
-  async add(email: string, username: string, userPassword: string) {
+
+  async add({ username, email, password: userPassword }: CreateUserData) {
+    await this.assertUniqueEmailAndUsername(username, email);
+
     const salt = await bcrypt.genSalt();
-    const hashPassword = await bcrypt.hash(userPassword, salt);
-    const emailExist = await this.usersRepository.findOneBy({ email });
+    const hashedPassword = await bcrypt.hash(userPassword, salt);
+    const createdUser = await this.usersRepository.create({
+      email,
+      username,
+      password: hashedPassword,
+    });
+    const payload = { sub: createdUser.id, email: createdUser.email };
+    const token = await this.jwtService.signAsync(payload);
+    await this.mailService.sendUserConfirmation(createdUser, token);
+    return createdUser;
+  }
+
+  private async assertUniqueEmailAndUsername(username: string, email: string) {
+    const emailExist = await this.usersRepository.findOneByEmail(email);
     if (emailExist) {
       throw new ConflictException('Account with this email already exists');
     }
-    const usernameExist = await this.usersRepository.findOneBy({ username });
+    const usernameExist =
+      await this.usersRepository.findOneByUsername(username);
     if (usernameExist) {
       throw new ConflictException('Account with this username already exists.');
     }
-    const newUser = this.usersRepository.create({
-      email,
-      password: hashPassword,
-      username: username,
-    });
-    const savedUser = await this.usersRepository.save(newUser);
-    const { password, ...userDetails } = savedUser;
-    const payload = { sub: newUser.id, email: newUser.email };
-    const token = await this.jwtService.signAsync(payload);
-    await this.mailService.sendUserConfirmation(newUser, token);
-    return userDetails;
   }
 }
