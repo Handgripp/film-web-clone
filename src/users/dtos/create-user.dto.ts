@@ -16,7 +16,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   username: string;
 
-  @ApiProperty({ example: '1234' })
+  @ApiProperty({ example: 'Kamil1234!' })
   @IsString()
   @IsStrongPassword({
     minLength: 8,

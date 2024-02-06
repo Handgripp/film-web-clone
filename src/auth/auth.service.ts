@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
@@ -19,6 +23,20 @@ export class AuthService {
     const payload = { sub: user.id, email: user.email };
     return {
       accessToken: await this.jwtService.signAsync(payload),
+    };
+  }
+  async confirm(token: string) {
+    const decoded = this.jwtService.decode(token);
+    if (!decoded) {
+      throw new UnauthorizedException();
+    }
+    const user = this.usersService.getOne(decoded.email);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    const confirmedUser = await this.usersService.activator(decoded.email);
+    return {
+      message: 'You successfully activated your account.',
     };
   }
 }
