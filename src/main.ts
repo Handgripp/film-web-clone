@@ -8,10 +8,10 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('Film web')
-    .setDescription('The film web API description')
+    .setTitle('Filmweb')
+    .setDescription('The filmweb API description')
     .setVersion('1.0')
-    .addTag('film web')
+    .addTag('filmweb')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
