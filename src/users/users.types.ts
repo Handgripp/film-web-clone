@@ -10,6 +10,6 @@ export type UserData = {
   email: string;
   password: string;
   isActive: boolean;
-  created_at: Date;
-  updated_at: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };

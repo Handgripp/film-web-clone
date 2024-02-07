@@ -4,8 +4,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
-import { UsersModule } from './users/users.module';
+import { MediaModule } from './media/media.module';
 import { User } from './shared/entities/users.entity';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { User } from './shared/entities/users.entity';
     }),
     AuthModule,
     MailModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
