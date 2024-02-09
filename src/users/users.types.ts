@@ -1,7 +1,10 @@
+import { UserRole } from 'src/shared/entities/users.entity';
+
 export type CreateUserData = {
   email: string;
   password: string;
   username: string;
+  userRole: UserRole;
 };
 
 export type UserData = {
@@ -12,4 +15,5 @@ export type UserData = {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  userRole: UserRole;
 };

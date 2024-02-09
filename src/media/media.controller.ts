@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { CreateMediaRequestDto } from './dtos/request/createMediaRequest.dto';
 import { mediaResponseDto } from './dtos/response/mediaResponse.dto';
 import { MediaService } from './media.service';
@@ -9,6 +10,8 @@ import { MediaService } from './media.service';
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @Post('')
   async createMedia(
     @Body() body: CreateMediaRequestDto,

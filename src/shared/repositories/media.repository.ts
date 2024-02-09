@@ -24,4 +24,7 @@ export class MediaRepository implements AbstractMediaRepository {
     const savedMovie = await this.mediaRepository.save(newMovie);
     return savedMovie;
   }
+  async findOneByTitle(title: string): Promise<MediaData> {
+    return this.mediaRepository.findOneBy({ title });
+  }
 }

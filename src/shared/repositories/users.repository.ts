@@ -15,11 +15,13 @@ export class UsersRepository implements AbstractUsersRepository {
     email,
     username,
     password,
+    userRole,
   }: CreateUserData): Promise<UserData> {
     const newUser = this.usersRepository.create({
       email,
       password,
       username,
+      userRole,
     });
     const savedUser = await this.usersRepository.save(newUser);
     return savedUser;

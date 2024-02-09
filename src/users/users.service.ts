@@ -42,7 +42,12 @@ export class UsersService {
     }
   }
 
-  async add({ username, email, password: userPassword }: CreateUserData) {
+  async add({
+    username,
+    email,
+    password: userPassword,
+    userRole,
+  }: CreateUserData) {
     await this.assertUniqueEmailAndUsername(username, email);
 
     const salt = await bcrypt.genSalt();
@@ -51,6 +56,7 @@ export class UsersService {
       email,
       username,
       password: hashedPassword,
+      userRole,
     });
     const payload = { sub: createdUser.id, email: createdUser.email };
     const token = await this.jwtService.signAsync(payload);
