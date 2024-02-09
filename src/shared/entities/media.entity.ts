@@ -7,6 +7,11 @@ import {
 } from 'typeorm';
 import { Episodes } from './episodes.entity';
 
+export enum MediaType {
+  Movie = 'movie',
+  Series = 'series',
+}
+
 @Entity()
 export class Media {
   @PrimaryGeneratedColumn('uuid')
@@ -16,13 +21,13 @@ export class Media {
   title: string;
 
   @Column()
-  realaseDate: string;
+  releaseDate: Date;
 
   @Column({
     type: 'enum',
-    enum: ['movie, series'],
+    enum: MediaType,
   })
-  type: string;
+  type: MediaType;
 
   @OneToMany(() => Episodes, (episodes) => episodes.series)
   episodes: Episodes[];
