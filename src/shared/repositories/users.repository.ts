@@ -10,18 +10,23 @@ export class UsersRepository implements AbstractUsersRepository {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
   ) {}
-
+  async activeUser(email: string): Promise<UserData> {
+    const user = await this.findOneByEmail(email);
+    user.isActive = true;
+    const savedUser = await this.usersRepository.save(user);
+    return savedUser;
+  }
   async create({
     email,
     username,
     password,
-    userRole,
+    role,
   }: CreateUserData): Promise<UserData> {
     const newUser = this.usersRepository.create({
       email,
       password,
       username,
-      userRole,
+      role,
     });
     const savedUser = await this.usersRepository.save(newUser);
     return savedUser;

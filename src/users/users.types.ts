@@ -1,10 +1,10 @@
-import { UserRole } from 'src/shared/entities/users.entity';
+import { UserRole } from 'src/shared/role/role.enum';
 
 export type CreateUserData = {
   email: string;
   password: string;
   username: string;
-  userRole: UserRole;
+  role: UserRole;
 };
 
 export type UserData = {
@@ -15,5 +15,5 @@ export type UserData = {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
-  userRole: UserRole;
+  role: UserRole;
 };

@@ -11,11 +11,12 @@ export class MediaService {
   ) {}
 
   async add({ title, releaseDate, type }: CreateMediaData) {
-    const media = this.mediaRepository.create({ title, releaseDate, type });
-    const titleExist = this.mediaRepository.findOneByTitle(title);
+    const titleExist = await this.mediaRepository.findOneByTitle(title);
     if (titleExist) {
       throw new ConflictException('Media with this title already exist');
     }
+    const media = this.mediaRepository.create({ title, releaseDate, type });
+
     await this.omdbApiClient.getMovieData(title);
     return media;
   }

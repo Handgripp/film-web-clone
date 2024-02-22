@@ -31,23 +31,16 @@ export class UsersService {
 
   async activator(email: string) {
     const user = await this.getOne(email);
+
     if (!user.isActive) {
-      user.isActive = true;
-      const savedUser = await this.usersRepository.findOneByUsername(
-        user.username,
-      );
-      return savedUser;
+      const updatedUser = this.usersRepository.activeUser(email);
+      return updatedUser;
     } else {
       throw new ConflictException('The account is already activated');
     }
   }
 
-  async add({
-    username,
-    email,
-    password: userPassword,
-    userRole,
-  }: CreateUserData) {
+  async add({ username, email, password: userPassword, role }: CreateUserData) {
     await this.assertUniqueEmailAndUsername(username, email);
 
     const salt = await bcrypt.genSalt();
@@ -56,7 +49,7 @@ export class UsersService {
       email,
       username,
       password: hashedPassword,
-      userRole,
+      role,
     });
     const payload = { sub: createdUser.id, email: createdUser.email };
     const token = await this.jwtService.signAsync(payload);

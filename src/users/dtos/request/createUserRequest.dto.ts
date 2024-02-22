@@ -6,7 +6,7 @@ import {
   IsString,
   IsStrongPassword,
 } from 'class-validator';
-import { UserRole } from 'src/shared/entities/users.entity';
+import { UserRole } from 'src/shared/role/role.enum';
 
 export class CreateUserRequestDto {
   @ApiProperty({ example: 'a@a.com' })
@@ -32,5 +32,5 @@ export class CreateUserRequestDto {
   @ApiProperty({ example: 'admin' })
   @IsEnum(UserRole)
   @IsNotEmpty()
-  userRole: UserRole;
+  role: UserRole;
 }

@@ -5,11 +5,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
-export enum UserRole {
-  Admin = 'admin',
-  Client = 'client',
-}
+import { UserRole } from '../role/role.enum';
 
 @Entity()
 export class User {
@@ -29,7 +25,7 @@ export class User {
     type: 'enum',
     enum: UserRole,
   })
-  userRole: UserRole;
+  role: UserRole;
 
   @Column({ default: false })
   isActive: boolean;
