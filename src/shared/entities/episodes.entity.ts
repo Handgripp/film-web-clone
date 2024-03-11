@@ -13,7 +13,7 @@ export class Episodes {
   id: string;
 
   @ManyToOne(() => Media, (media) => media.id)
-  series: Media;
+  media: string;
 
   @Column()
   title: string;

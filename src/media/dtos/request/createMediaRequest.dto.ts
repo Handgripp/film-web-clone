@@ -17,3 +17,10 @@ export class CreateMediaRequestDto {
   @IsNotEmpty()
   type: MediaType;
 }
+
+export class CreateEpisodesRequestDto {
+  @ApiProperty({ example: 'movie' })
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+}

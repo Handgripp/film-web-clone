@@ -8,6 +8,7 @@ export type CreateMediaData = {
 
 export type CreateEpisodesData = {
   title: string;
+  media: string;
 };
 
 export type MediaData = {
@@ -20,7 +21,7 @@ export type MediaData = {
 
 export type EpisodesData = {
   id: string;
-  series: string;
-  title: Date;
+  media: string;
+  title: string;
   addedAt: Date;
 };

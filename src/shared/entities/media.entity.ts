@@ -29,7 +29,7 @@ export class Media {
   })
   type: MediaType;
 
-  @OneToMany(() => Episodes, (episodes) => episodes.series)
+  @OneToMany(() => Episodes, (episodes) => episodes.media)
   episodes: Episodes[];
 
   @CreateDateColumn()
